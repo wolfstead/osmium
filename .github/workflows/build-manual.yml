@@ -1,0 +1,35 @@
+name: build-manual
+permissions: {}
+on:
+  workflow_dispatch:
+    inputs:
+      recipe:
+        description: Recipe file to build
+        type: string
+        required: true
+        default: images/osmium.yml
+      branch:
+        description: Branch to build from
+        type: string
+        required: true
+        default: main
+      chunkah:
+        description: Use chunked OCI image (chunkah)
+        type: boolean
+        default: true
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.branch }}-${{ inputs.recipe }}
+  cancel-in-progress: true
+jobs:
+  bluebuild:
+    name: Build osmium
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/build-single.yml
+    with:
+      recipe: ${{ inputs.recipe }}
+      branch: ${{ inputs.branch }}
+      chunkah: ${{ inputs.chunkah }}
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}

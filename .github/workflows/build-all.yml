@@ -1,0 +1,19 @@
+name: build
+permissions: {}
+on:
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+jobs:
+  silverblue-main:
+    name: Build osmium
+    if: github.triggering_actor == 'wolfstead'
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/build-one.yml
+    with:
+      recipe: images/osmium.yml
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
