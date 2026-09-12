@@ -18,9 +18,6 @@ on:
         description: Use chunked OCI image (chunkah)
         type: boolean
         default: true
-concurrency:
-  group: ${{ github.workflow }}-${{ inputs.branch || github.ref }}-${{ inputs.recipe || 'images/osmium.yml' }}
-  cancel-in-progress: true
 jobs:
   bluebuild:
     name: Build osmium
